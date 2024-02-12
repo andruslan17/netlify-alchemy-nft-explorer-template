@@ -160,7 +160,7 @@ const abi =[
     }
   ];
 
-  const contractAddress = '0xbAa68d816B2713F9e2f188f1B802ef8b77B2936b';
+const contractAddress = '0xbAa68d816B2713F9e2f188f1B802ef8b77B2936b';
 const alchemyAPIKey = 'JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
 const alchemyURL = 'https://polygon-mainnet.g.alchemy.com/v2/JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
 
@@ -198,7 +198,7 @@ const wagmiClient = createClient({
 });
 
 // Необходимо убедиться, что wagmiClient инициализирован перед использованием
-wagmiClient.onConnect(async () => {
+wagmiClient.on("connect", async () => {
     try {
         // Определение экземпляра контракта
         const contractInstance = wagmiClient.getContract(contractAddress, abi);

@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, WagmiClientConfig } from "wagmi";
 import {
     mainnet,
     polygon,
@@ -161,9 +161,8 @@ const abi =[
   ];
 
 const contractAddress = '0xbAa68d816B2713F9e2f188f1B802ef8b77B2936b';
-const alchemyAPIKey = 'JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
+const alchemyAPIKey = process.env.ALCHEMY_API_KEY; // Переменная окружения
 const alchemyURL = 'https://polygon-mainnet.g.alchemy.com/v2/JJbjMztYVUqS5wDcRxF8wmBPrimSglub';
-
 const infuraAPIKey = 'c6f67ed83ef14e6298373339528a7587';
 const infuraURL = 'https://polygon-mainnet.infura.io/v3/c6f67ed83ef14e6298373339528a7587';
 const tokenParams = {
@@ -183,7 +182,7 @@ const { chains, provider } = configureChains(
         arbitrum,
         arbitrumGoerli,
     ],
-    [alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY }), publicProvider()]
+    [alchemyProvider({ apiKey: alchemyAPIKey }), publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
@@ -209,11 +208,11 @@ wagmiClient.connection.on("open", async () => {
     }
 });
 
-export { WagmiConfig, RainbowKitProvider };
+export { WagmiClientConfig, RainbowKitProvider };
 
 function MyApp({ Component, pageProps }) {
     return (
-        <WagmiConfig client={wagmiClient}>
+        <WagmiClientConfig client={wagmiClient}>
             <RainbowKitProvider
                 modalSize="compact"
                 initialChain={process.env.NEXT_PUBLIC_DEFAULT_CHAIN}
@@ -223,7 +222,7 @@ function MyApp({ Component, pageProps }) {
                     <Component {...pageProps} />
                 </MainLayout>
             </RainbowKitProvider>
-        </WagmiConfig>
+        </WagmiClientConfig>
     );
 }
 

@@ -197,8 +197,8 @@ const wagmiClient = createClient({
     provider,
 });
 
-// Необходимо убедиться, что wagmiClient инициализирован перед использованием
-wagmiClient.on("connect", async () => {
+// Обработчик события подключения
+wagmiClient.connection.on("open", async () => {
     try {
         // Определение экземпляра контракта
         const contractInstance = wagmiClient.getContract(contractAddress, abi);
